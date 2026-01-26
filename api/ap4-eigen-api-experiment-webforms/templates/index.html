@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Route berekenen</title>
+</head>
+<body>
+    <h1>Routeberekening</h1>
+
+    <form method="post">
+        <label>Vertrekplaats:</label><br>
+        <input type="text" name="start" required><br><br>
+
+        <label>Bestemming:</label><br>
+        <input type="text" name="end" required><br><br>
+
+        <button type="submit">Bereken route</button>
+    </form>
+
+    {% if result %}
+        <h2>Resultaat</h2>
+        <p><strong>Van:</strong> {{ result.start }}</p>
+        <p><strong>Naar:</strong> {{ result.end }}</p>
+        <p><strong>Afstand:</strong> {{ result.distance }} km</p>
+        <p><strong>Reistijd:</strong> {{ result.time }} minuten</p>
+    {% endif %}
+</body>
+</html>
