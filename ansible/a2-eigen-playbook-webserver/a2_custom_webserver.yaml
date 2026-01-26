@@ -1,0 +1,35 @@
+---
+- hosts: webservers
+  become: yes
+  tasks:
+
+    - name: INSTALL APACHE2
+      apt:
+        name: apache2
+        state: present
+
+    - name: APACHE LISTEN ON PORT 8081
+      lineinfile:
+        path: /etc/apache2/ports.conf
+        regexp: '^Listen 80'
+        line: 'Listen 8081'
+      notify: RESTART APACHE
+
+    - name: APACHE VIRTUALHOST PORT 8081
+      lineinfile:
+        path: /etc/apache2/sites-available/000-default.conf
+        regexp: '^<VirtualHost \*:80>'
+        line: '<VirtualHost *:8081>'
+      notify: RESTART APACHE
+
+    - name: DEPLOY CUSTOM WEBPAGE
+      copy:
+        src: files/index.html
+        dest: /var/www/html/index.html
+      notify: RESTART APACHE
+
+  handlers:
+    - name: RESTART APACHE
+      service:
+        name: apache2
+        state: restarted
