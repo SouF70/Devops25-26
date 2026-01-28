@@ -1,0 +1,29 @@
+---
+    - hosts: webservers
+      become: yes
+    
+      tasks:
+        - name: INSTALL APACHE2
+          apt:
+            name: apache2
+            state: present
+    
+        - name: APACHE LISTEN ON PORT 8081
+          lineinfile:
+            path: /etc/apache2/ports.conf
+            regexp: '^Listen'
+            line: 'Listen 8081'
+          notify: RESTART APACHE2
+    
+        - name: APACHE VIRTUALHOST ON PORT 8081
+          lineinfile:
+            path: /etc/apache2/sites-available/000-default.conf
+            regexp: '^<VirtualHost'
+            line: '<VirtualHost *:8081>'
+          notify: RESTART APACHE2
+    
+      handlers:
+        - name: RESTART APACHE2
+          service:
+            name: apache2
+            state: restarted    
